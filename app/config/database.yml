@@ -24,6 +24,10 @@ default: &default
 development:
   <<: *default
   database: app_development
+  username: <%= ENV.fetch("PGUSER") { "vagrant" } %>
+  password: <%= ENV.fetch("PGPASSWORD") { "vagrant" } %>
+  host: <%= ENV.fetch("PGHOST") { "localhost" } %>
+  port: <%= ENV.fetch("PGPORT") { 5432 } %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.

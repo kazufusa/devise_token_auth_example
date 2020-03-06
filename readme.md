@@ -2,5 +2,12 @@
 
 ```
 $ docker-compose build
-$ docker-compose run web create_app.sh
+$ docker-compose run --rm web create_app.sh
+```
+
+# 2. initial setup of devise
+
+```
+$ docker-compose run --rm web rails g devise:install
+$ docker-compose run --rm web rails g devise_token_auth:install User auth
 ```

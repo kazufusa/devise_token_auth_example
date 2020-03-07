@@ -21,10 +21,11 @@ $ docker-compose run --rm web rails g devise_token_auth:install User auth
 2. enable confirmable in user model
 3. run migration
 
-
-
 # testing
 
 - mailcatcher
 - https://remonote.jp/rails-letter-opener-web-mail
 - https://easyramble.com/test-action-mailer-with-rspec.html
+- http://uraway.hatenablog.com/entry/2019/01/02/170541
+- https://whatsupguys.net/programming-school-dive-into-code-learning-48/
+- https://easyramble.com/customize-mail-template-of-devise.html

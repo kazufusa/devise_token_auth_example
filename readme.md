@@ -128,6 +128,27 @@ Transfer-Encoding: chunked
 
 ## 5. rspec
 
+add rspec-rails to Gemfile
+
+```ruby
+group :development, :test do
+  # Note that rspec-rails 4.0 is still a beta release
+  gem 'rspec-rails', '~> 3.9.0'
+end
+```
+
+```bash
+$ docker-compose run --rm web bundle install
+$ docker-compose run --rm web rails g rspec:install
+Starting devise_token_auth_example_db_1 ... done
+        Running via Spring preloader in process 22
+      create  .rspec
+      create  spec
+      create  spec/spec_helper.rb
+      create  spec/rails_helper.rb
+```
+
+
 ## 6. confirmable / reconfirmable
 
 ## 7. Sign up by email only and set password after receiving invitation.

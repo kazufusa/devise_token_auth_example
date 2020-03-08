@@ -1,18 +1,28 @@
 require 'rails_helper'
 
 describe 'Sign up', type: :request do
+  before(:each) do
+    @current_user = FactoryBot.build_stubbed(:user)
+  end
+
   describe "POST /auth" do
     subject { post(user_registration_path, params: params) }
-    let(:params) { FactoryBot.attributes_for(:user) }
-    it "gives you an new user" do
-      subject
-      expect(response.has_header?('access-token')).to eq(true)
-      expect(response).to have_http_status(:success)
+    let(:params) {{
+      email: @current_user.email,
+      password: @current_user.password,
+      confirm_success_url: "https://testapp.com/registration"
+    }}
 
-      res = JSON.parse(response.body)
-      expect(res["status"]).to eq("success")
-      expect(res["data"]["id"]).to eq(User.last.id)
-      expect(res["data"]["email"]).to eq(User.last.email)
+    it "gives you an new user and confirm and sign in" do
+      subject
+      expect(response).to have_http_status(:success)
+      expect(ActionMailer::Base.deliveries.first).to be_present
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly @current_user.email
+      confirmation_link = %r{<a href="http://(.+)">Confirm my account<\/a>}
+        .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
+      get confirmation_link
+      login
+      expect(response.status).to eq(200)
     end
   end
 end

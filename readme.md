@@ -179,6 +179,101 @@ Finished in 2.54 seconds (files took 7.82 seconds to load)
 
 ## 6. confirmable / reconfirmable
 
+
+### create new user
+```
+$ curl localhost:3000/auth -X POST -i \
+  -d '{"email":"example@example.com", "password":"password", "confirm_success_url":"https://confirm"}' \
+  -H "content-type:application/json"
+HTTP/1.1 200 OK
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: strict-origin-when-cross-origin
+Content-Type: application/json; charset=utf-8
+ETag: W/"25acf033c3277330c95019ba448bf19e"
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: 7c749535-55b4-4bdb-b370-35b52381793e
+X-Runtime: 0.279289
+Transfer-Encoding: chunked
+
+{"status":"success","data":{"id":16,"provider":"email","uid":"example@example.com","allow_password_change":false,"name":null,"nickname":null,"image":null,"email":"example@example.com","created_at":"2020-03-10T13:40:36.534Z","updated_at":"2020-03-10T13:40:36.534Z"}}%
+```
+
+### invitation mail
+
+```
+Date: Tue, 10 Mar 2020 13:40:36 +0000
+From: development@development.com
+To: example@example.com
+Message-ID: <5e6798d486941_12b2807a2eaa4391da@f543b09345a6.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+client-config: default
+redirect-url: https://confirm
+
+<p>Welcome example@example.com!</p>
+
+<p>You can confirm your account email through the link below: </p>
+
+<p><a href="http:///auth/confirmation?config=default&confirmation_token=jGwUcMAjwC1JgbF3EU-A&redirect_url=https%3A%2F%2Fconfirm">Confirm my account</a></p>
+```
+
+### confirm
+
+```
+$ curl -X GET -i "localhost:3000/auth/confirmation?config=default&confirmation_token=jGwUcMAjwC1JgbF3EU-A&redirect_url=https%3A%2F%2Fconfirm"
+HTTP/1.1 302 Found
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: strict-origin-when-cross-origin
+Location: https://confirm?account_confirmation_success=true
+Content-Type: text/html; charset=utf-8
+Cache-Control: no-cache
+X-Request-Id: f97683dd-5aea-4d55-94ce-02f3f478ca0e
+X-Runtime: 0.120693
+Transfer-Encoding: chunked
+
+<html><body>You are being <a href="https://confirm?account_confirmation_success=true">redirected</a>.</body></html>% 
+```
+
+### sign in
+
+```
+curl localhost:3000/auth/sign_in -X POST -i \
+  -d '{"email":"example@example.com", "password":"password"}' \
+  -H "content-type:application/json"
+
+HTTP/1.1 200 OK
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: strict-origin-when-cross-origin
+Content-Type: application/json; charset=utf-8
+access-token: o-kO5J1wc1-A37LkLTs2TA
+token-type: Bearer
+client: KmfkCCJm6bBDuEH76a0oCA
+expiry: 1585057508
+uid: example@example.com
+ETag: W/"fa6c9937d8979965c65f3f0057f4009f"
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: 81fd6e37-b611-4ab7-828d-4f138d1a4d7c
+X-Runtime: 0.462255
+Transfer-Encoding: chunked
+
+{"data":{"id":16,"email":"example@example.com","provider":"email","uid":"example@example.com","allow_password_change":false,"name":null,"nickname":null,"image":null}}% 
+```
+
 ## 7. Sign up by email only and set password after receiving invitation.
 
 ## 8. REST API for user(s)

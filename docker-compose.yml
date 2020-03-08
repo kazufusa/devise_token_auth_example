@@ -24,5 +24,12 @@ services:
       - PGPASSWORD=postgres
       - PGHOST=db
       - PGPORT=5432
+
+  smtp:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080" # web
+      - "1025:1025" # smtp
+
 volumes:
   bundle:

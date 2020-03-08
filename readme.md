@@ -5,6 +5,12 @@
 
 ```
 $ docker-compose build
+$ docker-compose run --rm web bash -c "cat \`which create_app.sh\`"
+#!/bin/sh
+
+gem i -v 6.0.2.1 rails
+cd $APP_ROOT/..
+rails new app --api -d postgresql --skip-test
 $ docker-compose run --rm web create_app.sh
 ```
 

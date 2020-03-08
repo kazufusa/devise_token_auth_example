@@ -22,7 +22,26 @@ $ docker-compose run --rm web bundle install
 $ docker-compose run --rm web rails g devise_token_auth:install User auth
 ```
 
-## 3. edit migration and models/user.rb
+## 3. db migration
+
+add below to migration file
+
+      ## Trackable
+      t.integer  :sign_in_count, default: 0, null: false
+      t.datetime :current_sign_in_at
+      t.datetime :last_sign_in_at
+      t.string   :current_sign_in_ip
+      t.string   :last_sign_in_ip
+
+```
+$ docker-compose up -d db
+: fix app/models/user.rb
+: https://github.com/lynndylanhurley/devise_token_auth/issues/1276
+$ docker-compose run --rm web rails db:setup
+$ docker-compose run --rm web rails db:migration
+```
+
+## X. 
 
 1. add admin field to user table
 2. enable confirmable in user model

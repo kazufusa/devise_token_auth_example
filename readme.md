@@ -41,6 +41,92 @@ $ docker-compose run --rm web rails db:setup
 $ docker-compose run --rm web rails db:migration
 ```
 
+## 4. test with curl
+
+### sign up
+
+```
+curl localhost:3000/auth -X POST -i \
+  -d '{"email":"example@example.com", "password":"password"}' \
+  -H "content-type:application/json"
+
+HTTP/1.1 200 OK
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: strict-origin-when-cross-origin
+access-token: qXTz3dHpIivk9y2-Ixgyng
+token-type: Bearer
+client: v4z54dkrqyRH8cfVu-8Zmw
+expiry: 1584856137
+uid: example@example.com
+Content-Type: application/json; charset=utf-8
+ETag: W/"7c5144a53c34c450a25de652d3a90428"
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: 68aa8246-479d-433d-87a5-43f9fdc909da
+X-Runtime: 0.721965
+Transfer-Encoding: chunked
+
+{"status":"success","data":{"uid":"example@example.com","id":1,"email":"example@example.com","provider":"email","allow_password_change":false,"name":null,"nickname":null,"image":null,"created_at":"2020-03-08T05:48:57.187Z","updated_at":"2020-03-08T05:48:57.369Z"}}%
+```
+
+### sign in
+
+```
+curl localhost:3000/auth/sign_in -X POST -i \
+  -d '{"email":"example@example.com", "password":"password"}' \
+  -H "content-type:application/json"
+HTTP/1.1 200 OK
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: strict-origin-when-cross-origin
+Content-Type: application/json; charset=utf-8
+access-token: zBP485qfcQmJIOKnYX2v7A
+token-type: Bearer
+client: 4TMilZbTdmki45kpZ2Dpdw
+expiry: 1584856223
+uid: example@example.com
+ETag: W/"0b844d681927a23677ff78329b4c7409"
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: e701d328-597a-443e-a579-cc1ff9e88b30
+X-Runtime: 0.441844
+Transfer-Encoding: chunked
+
+{"data":{"id":1,"email":"example@example.com","provider":"email","uid":"example@example.com","allow_password_change":false,"name":null,"nickname":null,"image":null}}%
+```
+
+### sign out
+
+```
+curl localhost:3000/auth/sign_out -X DELETE -i \
+  -H "content-type:application/json" \
+  -H "access-token: zBP485qfcQmJIOKnYX2v7A" \
+  -H "client: 4TMilZbTdmki45kpZ2Dpdw" \
+  -H "uid: example@example.com"
+
+HTTP/1.1 200 OK
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen
+X-Permitted-Cross-Domain-Policies: none
+Referrer-Policy: strict-origin-when-cross-origin
+Content-Type: application/json; charset=utf-8
+ETag: W/"c955e57777ec0d73639dca6748560d00"
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: 3237608b-57d5-4b0c-b173-582c799b5e62
+X-Runtime: 0.176288
+Transfer-Encoding: chunked
+
+{"success":true}% 
+```
+
+
 ## X. 
 
 1. add admin field to user table

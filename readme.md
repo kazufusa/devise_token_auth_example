@@ -17,7 +17,8 @@ $ docker-compose run --rm web create_app.sh
 ## 2. initial setup of devise
 
 ```
-$ docker-compose run --rm web rails g devise:install
+: add `gem 'devise_token_auth'` to Gemfile
+$ docker-compose run --rm web bundle install
 $ docker-compose run --rm web rails g devise_token_auth:install User auth
 ```
 

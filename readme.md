@@ -126,6 +126,17 @@ Transfer-Encoding: chunked
 {"success":true}% 
 ```
 
+## 5. rspec
+
+## 6. confirmable / reconfirmable
+
+## 7. Sign up by email only and set password after receiving invitation.
+
+## 8. REST API for user(s)
+
+## 9. admin
+
+
 
 ## X. 
 

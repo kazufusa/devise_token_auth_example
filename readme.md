@@ -148,6 +148,34 @@ Starting devise_token_auth_example_db_1 ... done
       create  spec/rails_helper.rb
 ```
 
+### refs
+
+- https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
+- https://relishapp.com/rspec/rspec-rails/docs/generators
+
+```bash
+$ docker-compose run --rm web rails g factory_bot:user
+$ docker-compose run --rm web rails g rspec:request authentication
+: implement test
+$ docker-compose exec web rspec
+
+Sign up
+  POST /auth
+    gives you an new user
+
+Whether access is ocurring properly
+  general authentication via API,
+    gives you an authentication code if you are an existing user and you satisfy the password
+    gives you a status 200 on signing in
+
+Whether access is ocurring improperly
+  general authentication via API,
+    gives you no authentication code if you do not satisfy the password
+    gives you a status 401 on failing to sign in
+
+Finished in 2.54 seconds (files took 7.82 seconds to load)
+5 examples, 0 failures
+```
 
 ## 6. confirmable / reconfirmable
 

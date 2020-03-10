@@ -1,28 +1,71 @@
 require 'rails_helper'
 
-describe 'Sign up', type: :request do
+describe 'Sign up with password', type: :request do
   before(:each) do
     @current_user = FactoryBot.build_stubbed(:user)
-  end
-
-  describe "POST /auth" do
-    subject { post(user_registration_path, params: params) }
-    let(:params) {{
+    params = {
       email: @current_user.email,
       password: @current_user.password,
       confirm_success_url: "https://testapp.com/registration"
-    }}
+    }
+    post(user_registration_path, params: params)
+  end
 
-    it "gives you an new user and confirm and sign in" do
-      subject
+  context "and confirm and sign in" do
+    it "gives you an new user" do
       expect(response).to have_http_status(:success)
-      expect(ActionMailer::Base.deliveries.first).to be_present
-      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly @current_user.email
+    end
+
+    it "gives you an confirmation mail" do
+      expect(ActionMailer::Base.deliveries.last).to be_present
+      expect(ActionMailer::Base.deliveries.last.to).to contain_exactly @current_user.email
+    end
+
+    it "enable you to confirm" do
       confirmation_link = %r{<a href="http://(.+)">Confirm my account<\/a>}
         .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
       get confirmation_link
+      expect(response.status).to eq(302)
+    end
+
+    it "enable you to confirm and login" do
+      confirmation_link = %r{<a href="http://(.+)">Confirm my account<\/a>}
+        .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
+      get confirmation_link
+      expect(response.status).to eq(302)
       login
       expect(response.status).to eq(200)
+    end
+  end
+
+  context "and confimation_token is expired" do
+    it "gives you an new user" do
+      expect(response).to have_http_status(:success)
+    end
+
+    it "gives you an confirmation mail" do
+      expect(ActionMailer::Base.deliveries.last).to be_present
+      expect(ActionMailer::Base.deliveries.last.to).to contain_exactly @current_user.email
+    end
+
+    it "forbid you to confirm  after a month" do
+      travel 32.day
+
+      confirmation_link = %r{<a href="http://(.+)">Confirm my account<\/a>}
+        .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
+      get confirmation_link
+      expect(response.status).to eq(302)
+    end
+
+    it "forbid you to confirm and login after a month" do
+      travel 32.day
+
+      confirmation_link = %r{<a href="http://(.+)">Confirm my account<\/a>}
+        .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
+      get confirmation_link
+      expect(response.status).to eq(302)
+      login
+      expect(response.status).to eq(401)
     end
   end
 end

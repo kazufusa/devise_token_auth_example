@@ -179,8 +179,8 @@ Finished in 2.54 seconds (files took 7.82 seconds to load)
 
 ## 6. confirmable / reconfirmable
 
-
 ### create new user
+
 ```
 $ curl localhost:3000/auth -X POST -i \
   -d '{"email":"example@example.com", "password":"password", "confirm_success_url":"https://confirm"}' \
@@ -273,6 +273,8 @@ Transfer-Encoding: chunked
 
 {"data":{"id":16,"email":"example@example.com","provider":"email","uid":"example@example.com","allow_password_change":false,"name":null,"nickname":null,"image":null}}% 
 ```
+
+## 6.1 confirmation_with
 
 ## 7. Sign up by email only and set password after receiving invitation.
 

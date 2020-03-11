@@ -278,6 +278,14 @@ Transfer-Encoding: chunked
 
 ## 7. Sign up by email only and set password after receiving invitation.
 
+### flow without password
+
+1. sign up with only email
+2. send mail including confirmation link with confirmation_token
+3. click link and redirect to some url with reset_password_token
+3. patch/put user_password_path with reset_password_token, password, password_confirmation
+4. user is enabled to login with email and password
+
 ## 8. REST API for user(s)
 
 ## 9. admin

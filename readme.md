@@ -328,9 +328,14 @@ $ curl -s localhost:3000/users | jq .
 ]
 ```
 
-## 9. admin
+## 9. lock
 
+## 10 confirmation mails
 
+- lock
+- unlock
+
+## 11. admin
 
 ## X. 
 

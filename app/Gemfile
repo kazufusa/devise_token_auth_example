@@ -42,6 +42,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'devise'
 gem 'devise_token_auth'
+gem 'active_model_serializers'
 
 group :development, :test do
   # Note that rspec-rails 4.0 is still a beta release

@@ -288,6 +288,10 @@ Transfer-Encoding: chunked
 
 ## 8. REST API for user(s)
 
+```
+$ docker-compose run --rm web rails g scaffold_controller Users
+```
+
 ## 9. admin
 
 

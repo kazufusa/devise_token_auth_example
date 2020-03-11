@@ -292,6 +292,42 @@ Transfer-Encoding: chunked
 $ docker-compose run --rm web rails g scaffold_controller Users
 ```
 
+install active_model_serializers
+
+```
+$ docker-compose run --rm web rails g serializer User
+```
+
+```
+$ curl -s localhost:3000/users | jq .
+[
+  {
+    "id": 17,
+    "name": null,
+    "email": "example@example.com",
+    "is_confirmed": false
+  },
+  {
+    "id": 18,
+    "name": null,
+    "email": "examplee@example.com",
+    "is_confirmed": false
+  },
+  {
+    "id": 19,
+    "name": null,
+    "email": "exampleee@example.com",
+    "is_confirmed": false
+  },
+  {
+    "id": 20,
+    "name": null,
+    "email": "exampleeee@example.com",
+    "is_confirmed": false
+  }
+]
+```
+
 ## 9. admin
 
 

@@ -21,6 +21,7 @@ class UsersController < ApplicationController
   # POST /users/1/lock
   def lock
     if @user.update(failed_attempts:100, locked_at: Time.now.utc)
+      NotificationMailer.send_account_locks(@user).deliver
       render json: @user
     else
       render json: @user.errors, status: :internal_server_error
@@ -30,6 +31,7 @@ class UsersController < ApplicationController
   # POST /users/1/unlock
   def unlock
     if @user.update(failed_attempts:0, locked_at: nil)
+      NotificationMailer.send_account_unlocks(@user).deliver
       render json: @user
     else
       render json: @user.errors, status: :internal_server_error

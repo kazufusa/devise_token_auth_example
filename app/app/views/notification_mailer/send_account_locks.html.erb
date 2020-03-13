@@ -1,0 +1,6 @@
+<p>Hello <%= @resource.email %>!</p>
+<p>Your account has been locked due to an excessive number of unsuccessful sign in attempts.</p>
+<p>Please contact the administrator to unlock your account.</p>
+<p>If you didn't request this, please ignore this email.</p>
+<p><%= link_to ActionMailer::Base.default_url_options[:host], ActionMailer::Base.default_url_options[:host] =%> </p>
+

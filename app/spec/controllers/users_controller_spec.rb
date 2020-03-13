@@ -65,14 +65,12 @@ RSpec.describe UsersController, type: :controller do
     let(:user) { @users[0] }
     let(:response) { post :lock, params: {id: user.id} }
 
-    it "locks the requested user" do
+    it "locks the requested user and send notification" do
       expect(response).to be_successful
       user.reload
       expect(user.locked_at).not_to be_nil
       expect(user.failed_attempts).not_to eq(0)
-    end
 
-    xit "sends a mail to the requested user" do
       expect(ActionMailer::Base.deliveries.last).to be_present
       expect(ActionMailer::Base.deliveries.last.to).to contain_exactly user.email
     end
@@ -81,15 +79,16 @@ RSpec.describe UsersController, type: :controller do
   describe "POST #unlock" do
     let(:user) { FactoryBot.create(:user, locked_at: Time.now.utc, failed_attempts: 6) }
     let(:response) { post :unlock, params: {id: user.id} }
+    before(:each) do
+      ActionMailer::Base.deliveries.clear
+    end
 
-    it "unlocks the requested user" do
+    it "unlocks the requested user and send notification" do
       expect(response).to be_successful
       user.reload
       expect(user.locked_at).to be_nil
       expect(user.failed_attempts).to eq(0)
-    end
 
-    xit "sends a mail to the requested user" do
       expect(ActionMailer::Base.deliveries.last).to be_present
       expect(ActionMailer::Base.deliveries.last.to).to contain_exactly user.email
     end

@@ -330,14 +330,29 @@ $ curl -s localhost:3000/users | jq .
 
 ## 9. lock
 
+1. add failed_attempts and locked_at to users
+2. lock strategy is :failed_attempts
+2. unlock strategy is none (self implementation)
+
 ## 10 confirmation mails
 
-- lock
-- unlock
+## 11. admin and user
 
-## 11. admin
+### admin
 
-## X. 
+- sign up user
+- user lock/unlock
+- creat password reset
+- delete user
+
+### user
+
+- change name
+- change password
+- confirmation via mail
+- reset password via mail
+
+## X.
 
 1. add admin field to user table
 2. enable confirmable in user model

@@ -144,6 +144,43 @@ RSpec.describe "PUT /auth/password", type: :request do
   end
 end
 
+RSpec.describe "lockable account", type: :request do
+  let(:user) { FactoryBot.create(:user) }
+  subject(:n) { n.times { post user_session_path, params: invalid_params } }
+
+  context "with 2 times login failure" do
+    let(:invalid_params) {{ email: user.email, password: "invalid" }}
+    let(:n) { 2 }
+
+    it "increments user failed_attempts" do
+      subject
+      user.reload
+      expect(user.locked_at).to be_nil
+      expect(user.failed_attempts).to eq(n)
+    end
+  end
+
+  context "with 10 times login failure" do
+    let(:invalid_params) {{ email: user.email, password: "invalid" }}
+    let(:n) { 10 }
+
+    it "makes account locked and notify nothing to user" do
+      subject
+      user.reload
+      expect(user.locked_at).not_to be_nil
+      expect(ActionMailer::Base.deliveries.last).not_to be_present
+    end
+
+    it "disable user to log in " do
+      subject
+      expect(response.status).to eq(401)
+      expect(response.body).to include \
+        "Your account has been locked due to an excessive number of unsuccessful sign in attempts."
+    end
+  end
+
+end
+
 def login pw=nil
   post user_session_path, params: {
     email: @current_user.email,

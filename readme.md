@@ -342,11 +342,18 @@ $ curl -s localhost:3000/users | jq .
 
 ## 10 confirmation mails
 
-- notify account lock/unlock by user controller
-- notify password reset instruction by user controller
+# notify account lock/unlock by user controller
 
 ```bash
 $ docker-compose run web rails g mailer NotificationMailer # for lock/unlock
+```
+
+# notify password reset instruction
+
+```bash
+curl localhost:3000/auth/password -X POST -i \
+  -d '{"email":"example@example.com", "redirect_url":"localhost:3000/"}' \
+  -H "content-type:application/json"
 ```
 
 ## 11. admin and user

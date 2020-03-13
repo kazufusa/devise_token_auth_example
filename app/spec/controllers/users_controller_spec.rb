@@ -26,6 +26,7 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   before(:each) do
     @users = FactoryBot.create_list(:user, 10)
+    allow(controller).to receive(:authenticate_admin!).and_return true
   end
 
   describe "GET #index" do
@@ -33,7 +34,7 @@ RSpec.describe UsersController, type: :controller do
       get :index, params: {}
       expect(response).to be_successful
       json = JSON.parse(response.body)
-      expect(json.length).to eq(@users.length)
+      expect(json.length).to eq(User.all.count)
     end
   end
 

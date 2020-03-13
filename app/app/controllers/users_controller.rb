@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update]
+  before_action :set_user, only: [:show, :update, :destroy, :lock, :unlock]
 
   # GET /users
   def index
@@ -13,12 +13,26 @@ class UsersController < ApplicationController
     render json: @user
   end
 
-  # PATCH/PUT /users/1
-  def update
-    if @user.update(user_params)
+  # DELETE /users/1
+  def destroy
+    @user.destroy
+  end
+
+  # POST /users/1/lock
+  def lock
+    if @user.update(failed_attempts:100, locked_at: Time.now.utc)
       render json: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :internal_server_error
+    end
+  end
+
+  # POST /users/1/unlock
+  def unlock
+    if @user.update(failed_attempts:0, locked_at: nil)
+      render json: @user
+    else
+      render json: @user.errors, status: :internal_server_error
     end
   end
 
@@ -28,8 +42,8 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:name)
-    end
+    # # Only allow a trusted parameter "white list" through.
+    # def user_params
+    #   params.require(:user).permit(:name)
+    # end
 end

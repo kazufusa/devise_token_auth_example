@@ -330,9 +330,15 @@ $ curl -s localhost:3000/users | jq .
 
 ## 9. lock
 
+### user model
+
 1. add failed_attempts and locked_at to users
 2. lock strategy is :failed_attempts
-2. unlock strategy is none (self implementation)
+3. unlock strategy is none (self implementation)
+
+### user control
+
+1. add lock/unlock method
 
 ## 10 confirmation mails
 

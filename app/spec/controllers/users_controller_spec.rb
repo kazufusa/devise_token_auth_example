@@ -51,42 +51,47 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        { name: "a" }
-      }
-
-      it "updates the requested user" do
-        user = @users.first
-        put :update, params: {id: user.id, user: new_attributes}
-      end
-
-      it "renders a JSON response with the user" do
-        user = @users.first
-        put :update, params: {id: user.id, user: new_attributes}
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json; charset=utf-8')
-      end
-    end
-
-    shared_context "with invalid params" do |field, value|
-      it field do
-        user = @users.first
-        put :update, params: {id: user.id, user: {field => value}}
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq('application/json; charset=utf-8')
-        json = JSON.parse(response.body)
-        expect(json[field.to_s]).not_to eq(value)
-      end
-    end
-
-    context "with invalid params" do
-      include_context "with invalid params", :id, 100
-      include_context "with invalid params", :email, "invalid@invalid.com"
-      include_context "with invalid params", :is_confirmed, false
-      include_context "with invalid params", :nazonazo, "hatena"
+  describe "DELETE #destroy" do
+    it "destroys the requested user" do
+      user = @users[3]
+      expect {
+        delete :destroy, params: {id: user.id}
+      }.to change(User, :count).by(-1)
+      expect(response).to be_successful
     end
   end
 
+  describe "POST #lock" do
+    let(:user) { @users[0] }
+    let(:response) { post :lock, params: {id: user.id} }
+
+    it "locks the requested user" do
+      expect(response).to be_successful
+      user.reload
+      expect(user.locked_at).not_to be_nil
+      expect(user.failed_attempts).not_to eq(0)
+    end
+
+    xit "sends a mail to the requested user" do
+      expect(ActionMailer::Base.deliveries.last).to be_present
+      expect(ActionMailer::Base.deliveries.last.to).to contain_exactly user.email
+    end
+  end
+
+  describe "POST #unlock" do
+    let(:user) { FactoryBot.create(:user, locked_at: Time.now.utc, failed_attempts: 6) }
+    let(:response) { post :unlock, params: {id: user.id} }
+
+    it "unlocks the requested user" do
+      expect(response).to be_successful
+      user.reload
+      expect(user.locked_at).to be_nil
+      expect(user.failed_attempts).to eq(0)
+    end
+
+    xit "sends a mail to the requested user" do
+      expect(ActionMailer::Base.deliveries.last).to be_present
+      expect(ActionMailer::Base.deliveries.last.to).to contain_exactly user.email
+    end
+  end
 end

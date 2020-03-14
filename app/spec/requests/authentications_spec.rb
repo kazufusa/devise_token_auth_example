@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'A Ruby object with 4 elements' do |with_pw, expired|
+RSpec.shared_examples 'Authentication' do |with_pw, expired|
   before(:each) do
     @current_user = FactoryBot.build_stubbed(:user)
     params = {
@@ -67,25 +67,28 @@ RSpec.shared_examples 'A Ruby object with 4 elements' do |with_pw, expired|
     patch user_password_path(params)
     expect(response).to have_http_status(expired == false ? :success : :unauthorized)
 
+    login
+    expect(response).to have_http_status(:unauthorized)
+
     login "new-password"
     expect(response).to have_http_status(expired == false ? :success : :unauthorized)
   end unless with_pw
 end
 
-RSpec.describe "Sign up with password and confirmation in time, shared_examples" do
-  include_examples "A Ruby object with 4 elements", true, false
+RSpec.describe "Sign up with password and confirmation in time" do
+  include_examples "Authentication", true, false
 end
 
-RSpec.describe "Sign up with password and confirmation expired, shared_examples" do
-  include_examples "A Ruby object with 4 elements", true, true
+RSpec.describe "Sign up with password and confirmation expired" do
+  include_examples "Authentication", true, true
 end
 
-RSpec.describe "Sign up without password and confirmation in time, shared_examples" do
-  include_examples "A Ruby object with 4 elements", false, false
+RSpec.describe "Sign up without password and confirmation in time" do
+  include_examples "Authentication", false, false
 end
 
-RSpec.describe "Sign up without password and confirmation expired, shared_examples" do
-  include_examples "A Ruby object with 4 elements", false, true
+RSpec.describe "Sign up without password and confirmation expired" do
+  include_examples "Authentication", false, true
 end
 
 RSpec.describe 'Whether access is ocurring properly', type: :request do
@@ -106,7 +109,7 @@ RSpec.describe 'Whether access is ocurring properly', type: :request do
   end
 end
 
-describe 'Whether access is ocurring improperly', type: :request do
+RSpec.describe 'Whether access is ocurring improperly', type: :request do
   before(:each) do
     @current_user = FactoryBot.create(:user)
   end

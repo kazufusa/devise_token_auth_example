@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     confirmations: 'overrides/confirmations',
     passwords: 'overrides/passwords',
     registrations: 'overrides/registrations',
+    sessions: 'overrides/sessions',
   }
   resources :users, only: [:index, :show, :destroy] do
     member do

@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_13_133757) do
+ActiveRecord::Schema.define(version: 2020_03_16_041257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "session_histories", force: :cascade do |t|
+    t.string "name"
+    t.string "ip", null: false
+    t.boolean "is_failed", default: false, null: false
+    t.datetime "created_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false

@@ -1,0 +1,2 @@
+class SessionHistory < ApplicationRecord
+end

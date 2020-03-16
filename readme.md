@@ -399,13 +399,13 @@ $ curl -s localhost:3000/users | jq .
 
 ## 10 confirmation mails
 
-# notify account lock/unlock by user controller
+### notify account lock/unlock by user controller
 
 ```bash
 $ docker-compose run web rails g mailer NotificationMailer # for lock/unlock
 ```
 
-# notify password reset instruction
+### notify password reset instruction
 
 ```bash
 curl localhost:3000/auth/password -X POST -i \
@@ -426,6 +426,13 @@ curl localhost:3000/auth/password -X POST -i \
 - [x] GET    users
 - [x] GET    user
 - [x] DELETE user
+
+## 12. login history
+
+```
+$ rails g scaffold session_history name:string ip:string is_failed:boolean
+: remove updated_at from migration file
+```
 
 # testing
 

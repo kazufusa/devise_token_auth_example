@@ -1,5 +1,6 @@
 module Overrides
   class ConfirmationsController < DeviseTokenAuth::ConfirmationsController
+    before_action :authenticate_admin!, only: [:create]
 
     def show
       @resource = resource_class.confirm_by_token(resource_params[:confirmation_token])

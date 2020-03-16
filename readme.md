@@ -1,6 +1,5 @@
 # routes
 
-
 ```
              Prefix Verb   URI Pattern                      Controller#Action
          new_user_session GET    /auth/sign_in(.:format)          devise_token_auth/sessions#new
@@ -416,26 +415,17 @@ curl localhost:3000/auth/password -X POST -i \
 
 ## 11. admin and user
 
+### admin only
 
-### admin
-
-- sign up user
-- user lock/unlock
-- creat password reset
-- delete user
-
-### user
-
-- change name
-- change password
-- confirmation via mail
-- reset password via mail
-
-## X.
-
-1. add admin field to user table
-2. enable confirmable in user model
-3. run migration
+- [x] POST   user_password
+- [x] DELETE user_registration
+- [ ] POST   user_registration
+- [x] POST   user_confirmation
+- [x] POST   lock_user
+- [x] POST   unlock_user
+- [x] GET    users
+- [x] GET    user
+- [x] DELETE user
 
 # testing
 

@@ -2,13 +2,16 @@ require 'rails_helper'
 
 RSpec.shared_examples 'Authentication' do |with_pw, expired|
   before(:each) do
+    admin = FactoryBot.create(:user, admin: true)
+    headers = admin.create_new_auth_token
+
     @current_user = FactoryBot.build_stubbed(:user)
     params = {
       email: @current_user.email,
       password: with_pw ? @current_user.password : nil,
       confirm_success_url: "https://testapp.com/registration"
     }
-    post(user_registration_path, params: params)
+    post(user_registration_path, params: params, headers: headers)
   end
 
   it "gives you an new user" do

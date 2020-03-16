@@ -41,40 +41,55 @@ RSpec.describe "GET /auth/confirmation", type: :request do
 end
 
 RSpec.describe "POST /auth/confirmation", type: :request do
-  let(:params) { {
-    email: user.email,
-  } }
+  let(:admin) { FactoryBot.create(:user, admin: true) }
+  let(:params) { { email: user.email } }
 
-  subject { post user_confirmation_path, params: params; response }
+  subject { post user_confirmation_path, params: params, headers: headers; response }
 
-  context "with existing user" do
-    let(:user) { FactoryBot.create(:user) }
+  context "with signing up as an administrator" do
+    let(:headers) { admin.create_new_auth_token }
 
-    it { is_expected.to have_http_status(:ok) }
+    context "with requesting to confirm to existing user" do
+      let(:user) { FactoryBot.create(:user) }
 
-    it "sets values of user confirmation_token and confirmation_sent_at" do
-      subject
-      expect{user.reload}.to change { user.confirmation_token }.from(nil)
-        .and change { user.confirmation_sent_at }.from(nil)
+      it { is_expected.to have_http_status(:ok) }
+
+      it "sets values of user confirmation_token and confirmation_sent_at" do
+        subject
+        expect{user.reload}.to change { user.confirmation_token }.from(nil)
+          .and change { user.confirmation_sent_at }.from(nil)
+      end
+
+      it "sends user a confirmation mail with a link including confirmation_token" do
+        subject
+        expect(ActionMailer::Base.deliveries.last).to be_present
+        expect(ActionMailer::Base.deliveries.last.to).to contain_exactly user.email
+
+        link = %r{<a href="http://(.+)">Confirm my account<\/a>}
+          .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
+        expect(Rack::Utils.parse_query(URI.parse(link).query)).to include "confirmation_token"
+      end
     end
 
-    it "sends user a confirmation mail with a link including confirmation_token" do
-      subject
-      expect(ActionMailer::Base.deliveries.last).to be_present
-      expect(ActionMailer::Base.deliveries.last.to).to contain_exactly user.email
-
-      link = %r{<a href="http://(.+)">Confirm my account<\/a>}
-        .match(ActionMailer::Base.deliveries.last.body.to_s)[1]
-      expect(Rack::Utils.parse_query(URI.parse(link).query)).to include "confirmation_token"
+    context "with requesting to confirm to not existing user" do
+      let(:user) { FactoryBot.build(:user) }
+      it { is_expected.to have_http_status(:not_found) }
+      it "sends no mail" do
+        subject
+        expect(ActionMailer::Base.deliveries).to be_empty
+      end
     end
   end
 
-  context "with not existing user" do
-    let(:user) { FactoryBot.build(:user) }
-    it { is_expected.to have_http_status(:not_found) }
-    it "sends no mail" do
-      subject
-      expect(ActionMailer::Base.deliveries).to be_empty
+  context "without signing up as an administrator" do
+    context "with requesting to confirm to existing user" do
+      let(:user) { FactoryBot.create(:user) }
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
+
+    context "with requesting to confirm to not existing user" do
+      let(:user) { FactoryBot.build(:user) }
+      it { is_expected.to have_http_status(:unauthorized) }
     end
   end
 end

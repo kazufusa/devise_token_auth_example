@@ -127,26 +127,6 @@ RSpec.describe 'Whether access is ocurring improperly', type: :request do
   end
 end
 
-RSpec.describe "PUT /auth/password", type: :request do
-  let(:user) { FactoryBot.create(:user) }
-  let(:newpw) { "new-password" }
-  let(:params) {{ "password"=> newpw, "password_confirmation"=> newpw }}
-  let(:headers) { user.create_new_auth_token }
-
-  it 'makes your password changed' do
-    put user_password_path, params: params, headers: headers
-    expect(response).to have_http_status(:success)
-  end
-
-  it 'makes your password changed and enable you to login with new pssword' do
-    put user_password_path, params: params, headers: headers
-    expect(response).to have_http_status(:success)
-
-    post user_session_path, params: { email: user.email, password: newpw }
-    expect(response).to have_http_status(:success)
-  end
-end
-
 RSpec.describe "lockable account", type: :request do
   let(:user) { FactoryBot.create(:user) }
   subject(:n) { n.times { post user_session_path, params: invalid_params } }

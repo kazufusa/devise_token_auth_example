@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'Users' do |user|
+RSpec.shared_examples "api endpoint /users/", type: :request do |user|
   before(:each) do
     @users = FactoryBot.create_list(:user, 10)
   end
@@ -35,19 +35,20 @@ RSpec.shared_examples 'Users' do |user|
 end
 
 RSpec.describe "Users" do
-  after(:all) do
-    User.delete_all
+  before(:each) do
+    @admin = FactoryBot.create(:user, admin: true)
+    @user = FactoryBot.create(:user)
   end
 
   describe "with admin login" do
-    include_examples "Users", FactoryBot.create(:user, admin: true)
+    include_examples "api endpoint /users/", @admin
   end
 
   describe "with user login" do
-    include_examples "Users", FactoryBot.create(:user)
+    include_examples "api endpoint /users/", @user
   end
 
   describe "without login" do
-    include_examples "Users", nil
+    include_examples "api endpoint /users/", nil
   end
 end

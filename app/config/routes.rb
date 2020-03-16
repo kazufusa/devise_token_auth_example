@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth' , controllers: {
-    confirmations: 'overrides/confirmations'
+    confirmations: 'overrides/confirmations',
+    registrations: 'overrides/registrations',
   }
   resources :users, only: [:index, :show, :destroy] do
     member do

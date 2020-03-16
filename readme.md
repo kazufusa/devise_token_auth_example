@@ -29,6 +29,33 @@
                           DELETE /users/:id(.:format)             users#destroy
 ```
 
+## implemented request tests
+
+- [ ] ~~GET    new_user_session~~ # not allowed, 405
+- [x] POST   user_session
+- [x] DELETE destroy_user_session
+- [ ] ~~GET    new_user_password~~ # not implemented
+- [ ] ~~GET    edit_user_password~~ # do nothing if require_client_password_reset_token = true
+- [x] PATCH  user_password
+- [x] PUT    user_password
+- [x] POST   user_password
+- [ ] ~~GET    cancel_user_registration~~ # not implemented
+- [ ] ~~GET    new_user_registration~~ # not implemented
+- [ ] ~~GET    edit_user_registration~~ # not implemented
+- [x] PATCH  user_registration
+- [x] PUT    user_registration
+- [x] DELETE user_registration
+- [x] POST   user_registration
+- [ ] ~~GET    new_user_confirmation~~ # not implemented
+- [x] GET    user_confirmation
+- [x] POST   user_confirmation
+- [x] GET    auth_validate_token
+- [x] POST   lock_user
+- [x] POST   unlock_user
+- [x] GET    users
+- [x] GET    user
+- [x] DELETE user
+
 # development flow
 
 
